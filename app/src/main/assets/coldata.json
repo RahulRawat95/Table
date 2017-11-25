@@ -1,0 +1,30 @@
+[
+	{
+		"col": "1",
+		"protected": true
+	},
+	{
+		"col": "2",
+		"protected": false
+	},
+	{
+		"col": "3",
+		"protected": true
+	},
+	{
+		"col": "4",
+		"protected": true
+	},
+	{
+		"col": "5",
+		"protected": true
+	},
+	{
+		"col": "6",
+		"protected": false
+	},
+	{
+		"col": "7",
+		"protected": true
+	}
+]
