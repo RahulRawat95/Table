@@ -4,7 +4,7 @@ package com.example.rawat.table;
  * Created by WIN10 on 11/24/2017.
  */
 
-public interface TableDataSource<TFirstHeaderDataType, TRowHeaderDataType, TColumnHeaderDataType, TItemDataType,TItemDataProtection> {
+public interface TableDataSource<TFirstHeaderDataType, TRowHeaderDataType, TColumnHeaderDataType, TItemDataType, TItemDataProtection, TItemInputType> {
 
     int getRowsCount();
 
@@ -19,4 +19,6 @@ public interface TableDataSource<TFirstHeaderDataType, TRowHeaderDataType, TColu
     TItemDataType getItemData(int rowIndex, int columnIndex);
 
     TItemDataProtection getItemProtection(int columnIndex);
+
+    TItemInputType getItemInputType(int columnIndex);
 }

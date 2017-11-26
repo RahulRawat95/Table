@@ -1,16 +1,15 @@
 package com.example.rawat.table;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,33 +22,50 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     Source source;
     InputMethodManager inputMethodManager;
     Adapter adapter;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        inputMethodManager =
-                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        adaptiveTableLayout = (AdaptiveTableLayout) findViewById(R.id.table_layout);
+        adaptiveTableLayout = findViewById(R.id.table_layout);
         editText = findViewById(R.id.editor);
         editText.setVisibility(View.GONE);
+
+        fab = findViewById(R.id.fab);
 
         source = new Source(this);
         adapter = new Adapter(source, getLayoutInflater(), this);
         adapter.setOnItemClickListener(this);
 
         adaptiveTableLayout.setAdapter(adapter);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        boolean b = source.saveInExcel();
+                        Toast.makeText(MainActivity.this, "File save " + (b ? "successfull" : "unsuccessfull"), Toast.LENGTH_LONG).show();
+                        return null;
+                    }
+                }.execute();
+            }
+        });
     }
 
     @Override
     public void onItemClick(final int row, final int column) {
-        if (!source.getItemProtection(column)) {
+        if (source.getItemProtection(column)) {
             Toast.makeText(this, "You Cannot edit this field", Toast.LENGTH_LONG).show();
             return;
         }
         editText.setVisibility(View.VISIBLE);
+        editText.setInputType(source.getItemInputType(column));
         String st = source.getItemData(row, column);
         editText.setText(st);
         editText.setSelection(st.length());
@@ -63,12 +79,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                     case EditorInfo.IME_ACTION_DONE:
                         inputMethodManager.hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
                         String st = editText.getText().toString();
-                        if (!TextUtils.isEmpty(st)) {
-                            source.editItem(row, column, st);
-                            adapter.notifyItemChanged(row, column);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Cannot Leave it Blank", Toast.LENGTH_LONG).show();
-                        }
+                        source.editItem(row, column, st);
+                        adapter.notifyItemChanged(row, column);
                         editText.setVisibility(View.GONE);
                         return true;
                 }
@@ -100,8 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     public void onBackPressed() {
         if (editText.isShown()) {
             editText.setVisibility(View.GONE);
-        }
-        else
+        } else
             super.onBackPressed();
     }
 }

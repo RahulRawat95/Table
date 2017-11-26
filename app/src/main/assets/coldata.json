@@ -1,30 +1,37 @@
 [
 	{
 		"col": "1",
-		"protected": true
+		"protected": true,
+		"inputType":"number"
 	},
 	{
 		"col": "2",
-		"protected": false
+		"protected": true,
+		"inputType":"number"
 	},
 	{
 		"col": "3",
-		"protected": true
+		"protected": false,
+		"inputType":"text"
 	},
 	{
 		"col": "4",
-		"protected": true
+		"protected": false,
+		"inputType":"text"
 	},
 	{
 		"col": "5",
-		"protected": true
+		"protected": false,
+		"inputType":"text"
 	},
 	{
 		"col": "6",
-		"protected": false
+		"protected": false,
+		"inputType":"number"
 	},
 	{
 		"col": "7",
-		"protected": true
+		"protected": false,
+		"inputType":"number"
 	}
 ]
